@@ -10,10 +10,88 @@ from google.auth.transport.requests import Request
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
-def main():
-    """Shows basic usage of the Google Calendar API.
-    """
+def main(birthdays={}):
     creds = None
+    creds = get_credentials(creds)
+    service = build('calendar', 'v3', credentials=creds)
+
+    # TODO: Choose calendar name
+
+    # returns ID if it exists, else it creates a calendar
+    calendar_exists = see_if_calendar_exists(
+        service)
+
+    if calendar_exists is False:
+
+        print("Creating calendar with name 'FB-Birthdays'...")
+        # create calendar if it doesnt exists
+        create_calendar(calendar_exists, service)
+
+    # returns ID after the calendar is created
+    calendar_id = see_if_calendar_exists(service)
+
+    for key in birthdays:
+
+        # get data
+        name, birthday = birthdays[key]
+
+        # print status
+        print(f"Adding {name}...")
+
+        # create event
+        event = {
+            'summary': f'{name}s birthday',
+            'description': f'{name}s birthday',
+            'start': {
+                'dateTime': f'{birthday}',
+                'timeZone': 'Europe/Stockholm',
+            },
+            'end': {
+                'dateTime': f'{birthday}',
+                'timeZone': 'Europe/Stockholm',
+            },
+            'recurrence': [
+                'RRULE:FREQ=YEARLY'
+            ],
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                    {'method': 'popup', 'minutes': 10},
+                    {'method': 'popup', 'minutes': 60*24*10}
+                ],
+            },
+        }
+
+        # Add to calendar
+        event = service.events().insert(
+            calendarId=calendar_id, body=event).execute()
+
+
+def create_calendar(calendar_exists, service):
+    # create calendar
+    calendar = {
+        'summary': 'FB-Birthdays'
+    }
+
+    # if the calendar doesnt exist, create it.
+    if not calendar_exists:
+        created_calendar = service.calendars().insert(body=calendar).execute()
+
+
+def see_if_calendar_exists(service):
+    """ returns False if no calendar with that name exists, else it returns the ID
+    """
+    page_token = None
+    calendar_list = service.calendarList().list(pageToken=page_token).execute()
+
+    for calendar_list_entry in calendar_list['items']:
+        if "FB-Birthdays" in calendar_list_entry["summary"]:
+            return calendar_list_entry["id"]
+
+    return False
+
+
+def get_credentials(creds):
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
@@ -31,30 +109,7 @@ def main():
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
-
-    service = build('calendar', 'v3', credentials=creds)
-
-    # look for current calendars
-    page_token = None
-    calendar_exists = False
-
-    calendar_list = service.calendarList().list(pageToken=page_token).execute()
-    for calander_list_entry in calendar_list['items']:
-        if "FB-Birthdays" in calander_list_entry["summary"]:
-            print("""There is a calendar with that name. 
-            Remove it or change the name.""")
-            calendar_exists = True
-
-    input("Paus")
-
-    # create calendar
-    calendar = {
-        'summary': 'FB-Birthdays'
-    }
-
-    # if the calendar already exists, skip.
-    if not calendar_exists:
-        created_calendar = service.calendars().insert(body=calendar).execute()
+    return creds
 
 
 if __name__ == '__main__':
