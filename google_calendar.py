@@ -9,27 +9,30 @@ from google.auth.transport.requests import Request
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
+# Language/region specific variables
+time_zone = "Europe/Stockholm"
+after_name = "fyller år"
+calendar_name = "FB-Birthdays"
+
 
 def main(birthdays={}):
     creds = None
     creds = get_credentials(creds)
     service = build('calendar', 'v3', credentials=creds)
 
-    # TODO: Choose calendar name
-
     # returns ID if it exists, else it creates a calendar
-    calendar_exists = see_if_calendar_exists(
-        service)
+    calendar_exists = see_if_calendar_exists(service)
 
     if calendar_exists is False:
 
-        print("Creating calendar with name 'FB-Birthdays'...")
+        print(f"Creating calendar with name '{calendar_name}'...")
         # create calendar if it doesnt exists
         create_calendar(calendar_exists, service)
 
     # returns ID after the calendar is created
     calendar_id = see_if_calendar_exists(service)
 
+    # add each person to the calendar
     for key in birthdays:
 
         # get data
@@ -38,17 +41,17 @@ def main(birthdays={}):
         # print status
         print(f"Adding {name}...")
 
-        # create event
+        # create event data
         event = {
-            'summary': f'{name} fyller år',  # change language
+            'summary': f'{name} {after_name}',  # change language
             'description': f'{name}',
             'start': {
                 'dateTime': f'{birthday}',
-                'timeZone': 'Europe/Stockholm',  # change time zone
+                'timeZone': time_zone,
             },
             'end': {
                 'dateTime': f'{birthday}',
-                'timeZone': 'Europe/Stockholm',  # change time zone
+                'timeZone': time_zone,
             },
             'recurrence': [
                 'RRULE:FREQ=YEARLY'
@@ -70,7 +73,7 @@ def main(birthdays={}):
 def create_calendar(calendar_exists, service):
     # create calendar
     calendar = {
-        'summary': 'FB-Birthdays'
+        'summary': calendar_name
     }
 
     # if the calendar doesnt exist, create it.
@@ -85,7 +88,7 @@ def see_if_calendar_exists(service):
     calendar_list = service.calendarList().list(pageToken=page_token).execute()
 
     for calendar_list_entry in calendar_list['items']:
-        if "FB-Birthdays" in calendar_list_entry["summary"]:
+        if calendar_name in calendar_list_entry["summary"]:
             return calendar_list_entry["id"]
 
     return False

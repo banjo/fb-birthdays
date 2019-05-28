@@ -2,7 +2,9 @@ import requests
 import google_calendar
 import datetime
 
-url = "https://www.facebook.com/events/ical/birthdays/?uid=1386784203&key=AQCzvWatSQFq7vql"
+# read facebook calendar url from file for privacy
+with open("./facebook_calendar.txt", "r") as f:
+    url = f.read()
 
 
 def main():
