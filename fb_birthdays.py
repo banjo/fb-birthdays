@@ -9,10 +9,43 @@ def main():
     data = get_data()
     data_list = data_to_list(data)
     birthday_dict = get_dict_from_list(data_list)
-    # TODO: Add option to select which ones to add
 
-    # TODO: Add to calendar
+    # choose birthdays
+    birthday_dict = choose_birthdays(birthday_dict)
+
+    # Add to calendar
     google_calendar.main(birthday_dict)
+
+
+def choose_birthdays(birthday_dict):
+    while True:
+        answer = input(
+            "Do you want to choose which birthdays to include? (y/n) ")
+
+        if answer.lower() == "n":
+            return birthday_dict
+        elif answer.lower() == "y":
+            choosen_birthdays = get_birthdays(birthday_dict)
+            return choosen_birthdays
+        else:
+            continue
+
+
+def get_birthdays(birthday_dict):
+    #  create temporary dict to return
+    temp = {}
+
+    #  print information
+    input("The names will be printed, include by pressing 'y', exclude by pressing Enter. Press Enter when you are ready. ")
+
+    for key in birthday_dict:
+        name, birthday = birthday_dict[key]
+        answer = input(f"{name} ")
+
+        if answer.lower() == "y":
+            temp[name] = birthday_dict[key]
+
+    return temp
 
 
 def get_dict_from_list(data_list):

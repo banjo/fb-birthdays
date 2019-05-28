@@ -40,15 +40,15 @@ def main(birthdays={}):
 
         # create event
         event = {
-            'summary': f'{name}s birthday',
-            'description': f'{name}s birthday',
+            'summary': f'{name} fyller år',  # change language
+            'description': f'{name}',
             'start': {
                 'dateTime': f'{birthday}',
-                'timeZone': 'Europe/Stockholm',
+                'timeZone': 'Europe/Stockholm',  # change time zone
             },
             'end': {
                 'dateTime': f'{birthday}',
-                'timeZone': 'Europe/Stockholm',
+                'timeZone': 'Europe/Stockholm',  # change time zone
             },
             'recurrence': [
                 'RRULE:FREQ=YEARLY'
@@ -56,7 +56,7 @@ def main(birthdays={}):
             'reminders': {
                 'useDefault': False,
                 'overrides': [
-                    {'method': 'popup', 'minutes': 10},
+                    {'method': 'popup', 'minutes': 24*60},
                     {'method': 'popup', 'minutes': 60*24*10}
                 ],
             },
