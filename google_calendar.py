@@ -12,7 +12,6 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 def main():
     """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
     """
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -35,10 +34,27 @@ def main():
 
     service = build('calendar', 'v3', credentials=creds)
 
+    # look for current calendars
+    page_token = None
+    calendar_exists = False
+
+    calendar_list = service.calendarList().list(pageToken=page_token).execute()
+    for calander_list_entry in calendar_list['items']:
+        if "FB-Birthdays" in calander_list_entry["summary"]:
+            print("""There is a calendar with that name. 
+            Remove it or change the name.""")
+            calendar_exists = True
+
+    input("Paus")
+
+    # create calendar
     calendar = {
-        'summary': 'Birthdays'
+        'summary': 'FB-Birthdays'
     }
-    created_calendar = service.calendars().insert(body=calendar).execute()
+
+    # if the calendar already exists, skip.
+    if not calendar_exists:
+        created_calendar = service.calendars().insert(body=calendar).execute()
 
 
 if __name__ == '__main__':
