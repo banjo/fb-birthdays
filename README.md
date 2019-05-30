@@ -6,7 +6,7 @@ Python script to scrape birthdays of Facebook contacts to a private, manageable 
 3. A private calendar is created on your Google account with the birthday's you want to include.
 
 ## USAGE
-Run 'fb_birthdays.py'.
+Run **fb_birthdays.py**.
 
 ## IMPORTANT
 * You need to add the [Google Calendar API credentials](https://developers.google.com/calendar/quickstart/python) to the same directory as the python files. 
