@@ -5,16 +5,16 @@ Python script to scrape birthdays of Facebook contacts to a private, manageable 
 2. **OPTIONAL**: Choose which friends you want to add to your calendar. It is possible to fetch everyone as well. 
 3. A private calendar is created on your Google account with the birthday's you want to include.
 
-## USAGE
+## Usage
 Run **fb_birthdays.py**.
 
-## IMPORTANT
+## important
 * You need to add the [Google Calendar API credentials](https://developers.google.com/calendar/quickstart/python) to the same directory as the python files. 
 * The URL for Facebook's calendar file must be placed in a text file called **"facebook_calendar.txt"** in the same directory as the python files.
 * This script was made with the Swedish language in mind. Most changes for another language can be made at the top of the **"google_calendar.py"**.
 * Line 73 in **"fb_birthdays.py"** is based on the Swedish language as well. It removes the facebook greeting after the name. Other languages can either remove the line or just change the variable.
 
-## INFORMATION
+## Information
 * The birthday is set at *00:00* at morning.
 * The birthday reoccurs **every year** at the same time.
 * A reminder is set **10 days** before the birthday, as well as **1 day** before.
