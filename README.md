@@ -1,4 +1,4 @@
-# SCRAPE FACEBOOK BIRTHDAYS TO PRIVATE GOOGLE CALENDAR
+# Scrape Facebook birthdays to private Google calendar
 Python script to scrape birthdays of Facebook contacts to a private, manageable Google calendar. Scrape every birthday, or choose only the friends you would like.
 
 1. Scrape birthdays from Facebook's .ics file. Read [here](https://www.anirudhsethi.in/blog/tech/import-facebook-birthdays-as-calendar/) how to access it.
